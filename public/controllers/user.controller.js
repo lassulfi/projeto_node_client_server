@@ -181,24 +181,13 @@ class UserController {
      * get all users from the local storage and update de UI
      */
     selectAll(){
-        //let users = User.getUsersFromStorage();
-        let ajax = new XMLHttpRequest();
-        ajax.open("GET", "/users");
-        ajax.onload = event => {
-            let obj = {users:[]};
-            try{
-                obj = JSON.parse(ajax.responseText);
-            } catch(e){
-                console.error(e);
-            }
-            
-            obj.users.forEach(obj => {
+        HttpRequest.get("/users").then(data=>{
+            data.users.forEach(obj => {
                 let user = new User();
                 user.loadFromJSON(obj);
                 this.addLine(user);
             });
-        };
-        ajax.send();
+        })
     }
     
     /**
