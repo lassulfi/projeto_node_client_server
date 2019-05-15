@@ -4,7 +4,7 @@ var restify = require('restify-clients');
 var router = express.Router();
 
 /* Creates a JSON client */
-var client = restify.createJSONClient({
+var client = restify.createJsonClient({
   url:'http://localhost:4000'
 });
 
