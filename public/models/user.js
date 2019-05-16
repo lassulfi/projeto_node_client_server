@@ -79,27 +79,7 @@ class User {
      * @return {User[]} users
      */
     static getUsersFromStorage() {
-        let users = [];
-        //if(sessionStorage.getItem("users")) users = JSON.parse(sessionStorage.getItem("users"));
-        if(localStorage.getItem("users")) users = JSON.parse(localStorage.getItem("users"));
-
-        return users;
-    }
-
-    /**
-     * Generate a new id for the user based on the application id
-     * 
-     * @returns {number} usersId;
-     */
-    generateId() {
-        let usersId = parseInt(localStorage.getItem("userId"));
-        if(!usersId > 0) usersId = 0;
-        
-        usersId++;
-
-        localStorage.setItem("userId", usersId);
-        
-        return usersId;
+        return HttpRequest.get("/users");
     }
 
     /**
@@ -133,12 +113,6 @@ class User {
     }
 
     remove() {
-        let users = User.getUsersFromStorage();
-        users.forEach((user, index) => {
-            if(this._id == user._id) {
-                users.splice(index, 1);
-            }
-        });
-        localStorage.setItem("users", JSON.stringify(users));
+        return HttpRequest.delete(`/users/${this.id}`);
     }
 }

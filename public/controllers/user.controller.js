@@ -182,7 +182,7 @@ class UserController {
      * get all users from the local storage and update de UI
      */
     selectAll(){
-        HttpRequest.get("/users").then(data=>{
+        User.getUsersFromStorage().then(data=>{
             data.users.forEach(obj => {
                 let user = new User();
                 user.loadFromJSON(obj);
@@ -214,9 +214,10 @@ class UserController {
             if(confirm("Deseja realmente excluir?")) {
                 let user = new User();
                 user.loadFromJSON(JSON.parse(tr.dataset.user));
-                user.remove();
-                tr.remove();
-                this.updateCount();
+                user.remove().then(data=>{
+                    tr.remove();
+                    this.updateCount();
+                });
             }
         });
 
