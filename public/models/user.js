@@ -68,7 +68,7 @@ class User {
                     this[name] = new Date(json[name]);
                     break;
                 default:
-                this[name] = json[name];
+                if(name.substring(0, 1) === "_") this[name] = json[name];
             }            
         }
     }
@@ -103,26 +103,33 @@ class User {
     }
 
     /**
-     * Saves an instance of the user in the localStorage
+     * Saves an instance of the user in the database
      */
     save() {
-        let users = User.getUsersFromStorage();
-
-        if(this.id > 0) {
-            users.map(user => {
-                if(user._id == this._id){
-                    Object.assign(user, this);
-                }
-
-                return user;
+        return new Promise((resolve, reject)=>{
+            let promise;
+            if(this.id){
+                //update
+                promise = HttpRequest.put(`/users/${this.id}`, this.toJson());
+            } else {
+                //create
+                promise = HttpRequest.post("/users", this.toJson());
+            }
+            promise.then(data=>{
+                this.loadFromJSON(data);
+                resolve(this);
+            }).catch(e=>{
+                reject(e);
             });
-        } else {
-            this._id = this.generateId();
-            users.push(this);       
-        }
+        });
+    }
 
-        //sessionStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("users", JSON.stringify(users));
+    toJson(){
+        let json = {};
+        Object.keys(this).forEach(key => {
+            if(this[key] !== undefined) json[key] = this[key];
+        });
+        return json;
     }
 
     remove() {

@@ -43,16 +43,16 @@ class UserController {
 
                 let user = new User();
                 user.loadFromJSON(updatedUser);
-                user.save();
-
-                this.updateTableRow(tr, user);
-                this.updateCount();
-                this.formUpdateEl.reset();
-                btn.disabled = false;
+                user.save().then(user=>{
+                    this.updateTableRow(tr, user);
+                    this.updateCount();
+                    this.formUpdateEl.reset();
+                    btn.disabled = false;
+                    this.showPanelCreate();
+                });               
             },e => {
                 console.error(e);
             });
-            this.showPanelCreate();
         });
     }
 
@@ -99,10 +99,11 @@ class UserController {
             values.photo = "";
             this.getPhoto(this.formEl).then(content => {
                 values.photo = content;
-                values.save();
-                this.addLine(values);
-                this.formEl.reset();
-                btn.disabled = false;
+                values.save().then(user=>{
+                    this.addLine(user);
+                    this.formEl.reset();
+                    btn.disabled = false;
+                });
             },e => {
                 console.error(e);
             });
