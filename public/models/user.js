@@ -79,7 +79,7 @@ class User {
      * @return {User[]} users
      */
     static getUsersFromStorage() {
-        return HttpRequest.get("/users");
+        return Fetch.get("/users");
     }
 
     /**
@@ -90,10 +90,10 @@ class User {
             let promise;
             if(this.id){
                 //update
-                promise = HttpRequest.put(`/users/${this.id}`, this.toJson());
+                promise = Fetch.put(`/users/${this.id}`, this.toJson());
             } else {
                 //create
-                promise = HttpRequest.post("/users", this.toJson());
+                promise = Fetch.post("/users", this.toJson());
             }
             promise.then(data=>{
                 this.loadFromJSON(data);
@@ -113,6 +113,6 @@ class User {
     }
 
     remove() {
-        return HttpRequest.delete(`/users/${this.id}`);
+        return Fetch.delete(`/users/${this.id}`);
     }
 }
